@@ -1,0 +1,8 @@
+---
+
+- name: Reinstallation of Grafana via packaging tools
+  hosts: all
+  become: True
+  tasks:
+  - name: Reinstall grafana to address 'restart too fast' service error
+    shell: apt-get --reinstall install grafana

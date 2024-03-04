@@ -1,0 +1,10 @@
+---
+
+- name: Configure server with basic authentication
+  hosts: all
+  become: True
+  tasks:
+  - name: Install Basic Auth
+    ansible.builtin.script: scripts/installBasicAuth.sh {{ basic_user }} {{ basic_pass }}
+    args:
+      creates: /etc/nginx/htpasswd.users

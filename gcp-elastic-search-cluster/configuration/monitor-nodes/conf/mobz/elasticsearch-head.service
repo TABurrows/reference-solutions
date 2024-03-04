@@ -1,0 +1,13 @@
+[Unit]
+Description= Mobz Elastic Search Head
+
+[Service]
+Type=simple
+Restart=always
+User=nobody
+Group=nogroup
+WorkingDirectory=/var/www/elasticsearch-head
+ExecStart=/usr/bin/npm start
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,11 @@
+---
+
+- name: Add all ES Search Nodes to the Prometheus instance as targets
+  hosts: all
+  become: True
+  tasks:
+    - name: Add Additional Scrape Targets
+      copy: src=conf/prometheus/prometheus-v2.yml dest=/etc/prometheus/prometheus.yml
+
+    - name: Restart the Prometheus service
+      service: name=prometheus state=restarted

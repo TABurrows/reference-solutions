@@ -1,0 +1,22 @@
+---
+
+- name: Configure server with node exporter
+  hosts: all
+  become: True
+  tasks:
+  - name: Install node-exporter
+    ansible.builtin.script: scripts/installKibana.sh {{ public_ip }} {{ master_node }}
+    args:
+      creates: /etc/kibana/kibana.yml
+
+  - name: copy kibana nginx config file
+    copy: src=conf/nginx/kibana.conf dest=/etc/nginx/sites-available/kibana
+
+  - name: enable the kibana nginx configuration
+    file: >
+      dest=/etc/nginx/sites-enabled/kibana
+      src=/etc/nginx/sites-available/kibana
+      state=link
+
+  - name: restart nginx
+    service: name=nginx state=restarted

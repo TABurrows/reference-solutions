@@ -1,0 +1,51 @@
+---
+
+- name: Configure server with Plugin Head functionality
+  hosts: all
+  become: True
+  tasks:
+  - name: Add nodejs
+    ansible.builtin.apt:
+      name: nodejs
+      state: present
+      update_cache: yes
+
+  - name: Add npm
+    ansible.builtin.apt:
+      name: npm
+      state: present
+      update_cache: yes
+
+  - name: Add site source
+    ansible.builtin.unarchive:
+      src: files/mobz/eshead.tgz
+      dest: /var/www/
+      owner: root
+      group: root
+      mode: '0755'
+
+  - name: Install/update packages from the mobz package.json
+    npm:
+      path: /var/www/elasticsearch-head/
+      state: latest
+
+  - name: replace port number conflicting with node-exporter
+    shell: sed -i 's/9100/8100/' /var/www/elasticsearch-head/Gruntfile.js
+
+  - name: Install mobz head service unit file
+    copy: src=conf/mobz/elasticsearch-head.service dest=/etc/systemd/system/elasticsearch-head.service
+
+  - name: Start elasticsearch-head service
+    systemd: state=started name=elasticsearch-head daemon_reload=yes
+
+  - name: Copy over the nginx config file
+    copy: src=conf/nginx/mobzhead.conf dest=/etc/nginx/sites-available/mobzhead
+
+  - name: Add the nginx config file
+    file: >
+      dest=/etc/nginx/sites-enabled/mobzhead
+      src=/etc/nginx/sites-available/mobzhead
+      state=link
+      
+  - name: restart nginx
+    service: name=nginx state=restarted

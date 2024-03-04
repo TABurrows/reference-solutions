@@ -1,0 +1,22 @@
+---
+
+- name: Configure server with Prometheus
+  hosts: all
+  become: True
+  tasks:
+  - name: Install Prometheus
+    ansible.builtin.script: scripts/installPrometheus.sh
+    args:
+      creates: /etc/prometheus/installed.txt
+
+  - name: copy prometheus nginx config file
+    copy: src=conf/nginx/prometheus.conf dest=/etc/nginx/sites-available/prometheus
+
+  - name: enable configuration
+    file: >
+      dest=/etc/nginx/sites-enabled/prometheus
+      src=/etc/nginx/sites-available/prometheus
+      state=link
+
+  - name: restart nginx
+    service: name=nginx state=restarted

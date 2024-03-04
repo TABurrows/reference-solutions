@@ -1,0 +1,8 @@
+---
+
+- name: Configure server with logstash plugin
+  hosts: all
+  become: True
+  tasks:
+  - name: Install logstash plugin
+    ansible.builtin.script: scripts/installLogstashPlugin.sh 

@@ -1,0 +1,10 @@
+---
+
+- name: Configure server with logstash
+  hosts: all
+  become: True
+  tasks:
+  - name: Install logstash
+    ansible.builtin.script: scripts/installLogstash.sh 
+    args:
+      creates: /etc/logstash/logstash.yml

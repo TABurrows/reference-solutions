@@ -1,0 +1,31 @@
+---
+
+- name: Configure server with Grafana
+  hosts: all
+  become: True
+  tasks:
+  - name: Install Grafana
+    ansible.builtin.script: scripts/installGrafana.sh {{ grafana_user }} {{ grafana_pass }}
+    args:
+      creates: /etc/grafana/grafana.ini
+
+  # - name: Copy over /etc/grafana/grafana.ini
+  #   copy: src=conf/grafana/grafana.ini dest=/etc/grafana/grafana.ini
+
+  - name: copy grafana nginx config file
+    copy: src=conf/nginx/grafana.conf dest=/etc/nginx/sites-available/grafana
+
+  - name: enable nginx configuration
+    file: >
+      dest=/etc/nginx/sites-enabled/grafana
+      src=/etc/nginx/sites-available/grafana
+      state=link
+
+  - name: copy grafana server config file
+    copy: src=conf/nginx/grafana.conf dest=/etc/nginx/sites-available/grafana
+
+  - name: restart nginx
+    service: name=nginx state=restarted
+
+  # - name: restart grafana
+  #   service: name=grafana-server state=restarted

@@ -1,0 +1,11 @@
+---
+
+- name: Prepare for imaging shutdown now command vi ssh
+  hosts: all
+  become: True
+  tasks:
+
+  - name: Shutdown the instance
+    community.general.shutdown:
+      delay: 10
+      msg: "ANSIBLE: Shutting down for Image Creation."

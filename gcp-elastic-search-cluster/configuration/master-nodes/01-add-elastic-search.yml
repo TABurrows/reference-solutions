@@ -1,0 +1,21 @@
+---
+
+- name: Configure server with elastic search
+  hosts: all
+  become: True
+  tasks:
+  - name: Install elastic search
+    ansible.builtin.script: scripts/installElasticSearch.sh 
+    args:
+      creates: /etc/elasticsearch/elasticsearch.yml.ORIG
+
+  # - name: Move original config file
+  #   command: mv /etc/elasticsearch/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml.ORIG
+    
+  # - name: Copy down master config file
+  #   copy: src=conf/elasticsearch/MASTER-es.yml dest=/etc/elasticsearch/elasticsearch.yml
+
+  - name: Reboot required after system configuration changes
+    ansible.builtin.reboot:
+      reboot_timeout: 2400
+      
