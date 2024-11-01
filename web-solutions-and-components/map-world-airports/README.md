@@ -1,6 +1,9 @@
 # Map: World Airports
 
 
+A simple web application using the leaflet mapping package.
+
+
 ```jsx
 import { LatLngExpression } from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from "react-leaflet";

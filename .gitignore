@@ -1,3 +1,6 @@
+# Local ignore
+.IGNORE
+
 # Local .terraform directories
 **/.terraform/*
 
